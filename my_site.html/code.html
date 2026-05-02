@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WheelGo - Location de voitures</title>
+    <style>
+        /* Style general du site WheelGo */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background-color: #1a2a6c;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #ff9900;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            background-color: #ff9900;
+            border-radius: 5px;
+            color: #1a2a6c;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+
+        footer {
+            background-color: #1a2a6c;
+            color: #aaa;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #ff9900;
+            color: #1a2a6c;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #e68a00;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .hero {
+            background: linear-gradient(to bottom, #1a2a6c, #2a3a7c);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .hero h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .grille {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .carte {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .carte h3 {
+            color: #1a2a6c;
+            margin-bottom: 8px;
+        }
+
+        .carte .prix {
+            color: #ff9900;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .avantages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .avantage {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background-color: white;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #1a2a6c;
+            color: white;
+        }
+
+        .filtres {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .filtres .btn {
+            margin: 5px;
+        }
+
+        .form-reservation {
+            max-width: 500px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .form-reservation input, .form-reservation select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .avis-slider {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px auto;
+            max-width: 600px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                background-color: #1a2a6c;
+                padding: 10px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero h2 {
+                font-size: 24px;
+            }
+            
+            .carte {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo">
+            <h1>WheelGo</h1>
+            <p>Location de vehicules</p>
+        </div>
+        <div class="menu-toggle" id="menuToggle">☰</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a onclick="afficherPage('accueil')">Accueil</a></li>
+            <li><a onclick="afficherPage('vehicules')">Nos vehicules</a></li>
+            <li><a onclick="afficherPage('offres')">Offres et Tarifs</a></li>
+            <li><a onclick="afficherPage('avis')">Avis clients</a></li>
+            <li><a onclick="afficherPage('reservation')">Reservation</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="container" id="contenuPrincipal">
+    <!-- Le contenu va apparaitre ici --> z
+</main>
+
+<footer>
+    <p>&copy; 2025 WheelGo - Location de vehicules. Tous droits reserves.</p>
+</footer>
+
+<script>
+    // Tableau des vehicules (prix en Dirhams DH)
+    var vehicules = [
+        { nom: "Dacia Duster", type: "SUV", prix: 450, places: 5 },
+        { nom: "Peugeot 308", type: "Sadan", prix: 550, places: 5 },
+        { nom: "Yamaha MT-07", type: "Moto", prix: 700, places: 2 },
+        { nom: "Renault Clio", type: "Citadine", prix: 350, places: 5 },
+        { nom: "BMW Serie 3", type: "Prestige", prix: 1200, places: 5 },
+        { nom: "Tesla Model 3", type: "Prestige", prix: 1400, places: 5 },
+        { nom: "Honda CB650R", type: "Moto", prix: 650, places: 2 },
+        { nom: "Peugeot 2008", type: "SUV", prix: 500, places: 5 },
+        { nom: "Renault Megane", type: "Sadan", prix: 480, places: 5 },
+        { nom: "Kia Sportage", type: "SUV", prix: 600, places: 5 }
+    ];
+    
+    // Tableau des avis
+    var avis = [
+        { nom: "Karim", note: 5, commentaire: "Super service, voiture propre et neuve !" },
+        { nom: "Sara", note: 4, commentaire: "Tres bien, mais un peu d'attente à l'accueil." },
+        { nom: "Mohamed", note: 5, commentaire: "Je recommande, prix imbattables !" },
+        { nom: "Leila", note: 4, commentaire: "Moto en excellent etat, je reviendrai." }
+    ];
+    
+    var avisIndex = 0;
+    var categorieCourante = "Tous";
+    
+    // Fonction pour afficher les pages
+    function afficherPage(page) {
+        var contenu = document.getElementById("contenuPrincipal");
+        
+        if(page == "accueil") {
+            contenu.innerHTML = genererAccueil();
+        } 
+        else if(page == "vehicules") {
+            contenu.innerHTML = genererVehicules();
+            filtrerVehicules(categorieCourante);
+        }
+        else if(page == "offres") {
+            contenu.innerHTML = genererOffres();
+        }
+        else if(page == "avis") {
+            contenu.innerHTML = genererAvis();
+            mettreAJourSlider();
+        }
+        else if(page == "reservation") {
+            contenu.innerHTML = genererReservation();
+        }
+    }
+    
+    function genererAccueil() {
+        return `
+            <section class="hero">
+                <h2>Louez la voiture de vos reves</h2>
+                <p>SUV, Berlines, Motos et plus encore... Prix imbattables !</p>
+                <button class="btn" onclick="afficherPage('vehicules')">Voir nos vehicules</button>
+            </section>
+            
+            <section>
+                <h2 style="text-align:center; margin-bottom:20px;">Pourquoi choisir WheelGo ?</h2>
+                <div class="avantages">
+                    <div class="avantage"><h3>Large choix</h3><p>SUV, berlines, motos, citadines... plus de 30 vehicules disponibles.</p></div>
+                    <div class="avantage"><h3>Meilleurs prix</h3><p>A partir de seulement 350 DH/jour. Pas de frais caches.</p></div>
+                    <div class="avantage"><h3>Annulation gratuite</h3><p>Annulation sans frais jusqu'a 24h avant la prise en charge.</p></div>
+                </div>
+            </section>
+        `;
+    }
+    
+    function genererVehicules() {
+        return `
+            <h2 style="text-align:center;">Nos vehicules</h2>
+            <div class="filtres">
+                <button class="btn" onclick="filtrerVehicules('Tous')">Tous</button>
+                <button class="btn" onclick="filtrerVehicules('SUV')">SUV</button>
+                <button class="btn" onclick="filtrerVehicules('Sadan')">Sadan</button>
+                <button class="btn" onclick="filtrerVehicules('Moto')">Moto</button>
+                <button class="btn" onclick="filtrerVehicules('Citadine')">Citadine</button>
+                <button class="btn" onclick="filtrerVehicules('Prestige')">Prestige</button>
+            </div>
+            <div class="grille" id="grilleVehicules"></div>
+        `;
+    }
+    
+    function filtrerVehicules(categorie) {
+        categorieCourante = categorie;
+        var grille = document.getElementById("grilleVehicules");
+        if(!grille) return;
+        
+        var html = "";
+        for(var i = 0; i < vehicules.length; i++) {
+            if(categorie == "Tous" || vehicules[i].type == categorie) {
+                html += `<div class="carte">
+                            <h3>${vehicules[i].nom}</h3>
+                            <p>${vehicules[i].type} - ${vehicules[i].places} places</p>
+                            <p class="prix">${vehicules[i].prix} DH/jour</p>
+                            <button class="btn" onclick="afficherPage('reservation')">Reserver</button>
+                        </div>`;
+            }
+        }
+        grille.innerHTML = html;
+    }
+    
+    function genererOffres() {
+        return `
+            <h2 style="text-align:center;">Nos offres et tarifs</h2>
+            <table>
+                <tr>
+                    <th>Formule</th>
+                    <th>Prix/jour</th>
+                    <th>Kilometrage</th>
+                    <th>Assurance</th>
+                    <th>Annulation</th>
+                </tr>
+                <tr><td>Eco (Citadine)</td><td>350 DH</td><td>200 km</td><td>Incluse</td><td>Gratuite</td></tr>
+                <tr style="background-color:#f0f0f0;"><td>Confort (Sadan/SUV)</td><td>550 DH</td><td>300 km</td><td>Incluse</td><td>Gratuite</td></tr>
+                <tr><td>Prestige (BMW/Tesla)</td><td>1200 DH</td><td>Illimite</td><td>Tous risques</td><td>Gratuite</td></tr>
+                <tr style="background-color:#f0f0f0;"><td>Moto</td><td>650 DH</td><td>200 km</td><td>Incluse</td><td>Gratuite</td></tr>
+            </table>
+            <div style="text-align:center;"><button class="btn" onclick="afficherPage('reservation')">Reserver maintenant</button></div>
+        `;
+    }
+    
+    function genererAvis() {
+        return `
+            <h2 style="text-align:center;">Ce que nos clients disent</h2>
+            <div class="avis-slider" id="sliderAvis">
+                <p style="font-size:18px;" id="avisTexte"></p>
+                <p style="color:#ff9900; margin:15px 0;" id="avisNote"></p>
+                <p style="font-weight:bold;" id="avisNom"></p>
+                <div style="margin-top:25px;">
+                    <button class="btn" onclick="changerAvis(-1)">Precedent</button>
+                    <button class="btn" onclick="changerAvis(1)">Suivant</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    function mettreAJourSlider() {
+        var texte = document.getElementById("avisTexte");
+        var note = document.getElementById("avisNote");
+        var nom = document.getElementById("avisNom");
+        
+        if(texte) texte.innerHTML = avis[avisIndex].commentaire;
+        if(note) note.innerHTML = avis[avisIndex].note + "/5";
+        if(nom) nom.innerHTML = "- " + avis[avisIndex].nom;
+    }
+    
+    function changerAvis(direction) {
+        avisIndex = avisIndex + direction;
+        if(avisIndex < 0) avisIndex = avis.length - 1;
+        if(avisIndex >= avis.length) avisIndex = 0;
+        mettreAJourSlider();
+    }
+    
+    function genererReservation() {
+        var options = "";
+        for(var i = 0; i < vehicules.length; i++) {
+            options += `<option value="${vehicules[i].nom}">${vehicules[i].nom} - ${vehicules[i].prix} DH/jour</option>`;
+        }
+        
+        return `
+            <h2 style="text-align:center;">Reservez votre vehicule</h2>
+            <div class="form-reservation">
+                <label>Nom complet :</label>
+                <input type="text" id="nom" placeholder="Votre nom">
+                
+                <label>Email :</label>
+                <input type="email" id="email" placeholder="votre@email.com">
+                
+                <label>Vehicule :</label>
+                <select id="vehiculeChoisi">
+                    ${options}
+                </select>
+                
+                <label>Date debut :</label>
+                <input type="date" id="dateDebut">
+                
+                <label>Date fin :</label>
+                <input type="date" id="dateFin">
+                
+                <button class="btn" onclick="validerReservation()" style="width:100%;">Confirmer la reservation</button>
+            </div>
+        `;
+    }
+    
+    function validerReservation() {
+        var nom = document.getElementById("nom").value;
+        var email = document.getElementById("email").value;
+        var vehicule = document.getElementById("vehiculeChoisi").value;
+        var dateDebut = document.getElementById("dateDebut").value;
+        var dateFin = document.getElementById("dateFin").value;
+        
+        if(nom == "") {
+            alert("Veuillez entrer votre nom");
+            return;
+        }
+        if(email == "") {
+            alert("Veuillez entrer votre email");
+            return;
+        }
+        if(dateDebut == "") {
+            alert("Veuillez choisir une date de debut");
+            return;
+        }
+        if(dateFin == "") {
+            alert("Veuillez choisir une date de fin");
+            return;
+        }
+        
+        alert("Merci " + nom + " ! Votre reservation pour " + vehicule + " a ete confirmee.");
+    }
+    
+    // Charger la page d'accueil au demarrage
+    afficherPage("accueil");
+    
+    // Menu burger
+    var menuToggle = document.getElementById("menuToggle");
+    var navLinks = document.getElementById("navLinks");
+    if(menuToggle) {
+        menuToggle.addEventListener("click", function() {
+            if(navLinks.className == "nav-links") {
+                navLinks.className = "nav-links active";
+            } else {
+                navLinks.className = "nav-links";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
