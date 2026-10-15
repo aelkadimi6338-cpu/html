@@ -1,0 +1,30 @@
+Réponses aux questions (exercices 1, 3 et 6)
+
+## Exercice 1
+
+### Où s'exécute chaque élément ?
+
+| Élément | Exécution |
+|---|---|
+| **PHP** | Sur le **serveur** : Apache exécute le script et n'envoie au navigateur que le résultat (HTML généré). |
+| **HTML** | Dans le **navigateur** : il interprète les balises reçues pour construire la page. |
+| **CSS** | Dans le **navigateur** : il applique les styles pour mettre en forme la page. |
+| **JavaScript** | Dans le **navigateur** (côté client) : c'est lui qui exécute le code JS. |
+
+### Pourquoi faut-il passer par localhost ?
+
+PHP est un langage **côté serveur** : il a besoin d'un serveur web pour être exécuté. Si on ouvre le fichier directement dans le navigateur (protocole `file://`), le code PHP n'est pas exécuté et s'affiche en texte brut.
+
+En passant par `http://localhost/tp_php_01/ex02.php`, on envoie une requête au serveur **Apache** (démarré avec XAMPP) qui tourne sur notre propre machine : il exécute le script PHP, puis renvoie au navigateur la page HTML finale.
+
+## Exercice 3
+
+Non, on **ne voit pas** les instructions PHP dans le code source de la page (clic droit → Afficher le code source, ou Ctrl+U).
+
+**Explication :** le PHP est exécuté **par le serveur avant l'envoi de la page**. Le navigateur ne reçoit que le résultat produit par PHP, c'est-à-dire du HTML pur. Le code `<?php ... ?>` reste sur le serveur et n'est jamais transmis au navigateur.
+
+## Exercice 6
+
+Quand on affiche `$disponible` (qui vaut `true`) directement avec `echo`, la page affiche **« 1 »**. Si la variable valait `false`, `echo` n'afficherait **rien du tout** (chaîne vide).
+
+**Explication :** `echo` convertit la valeur en chaîne de caractères : `true` devient `"1"` et `false` devient `""`. On perd donc l'information sur le type. Avec `var_dump()`, on voit le type réel et la valeur exacte : `string(7) "Clavier"`, `int(3)`, `float(120.5)`, `bool(true)` — c'est pourquoi `var_dump()` est préféré pour observer et déboguer les variables.
